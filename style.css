@@ -1,0 +1,1383 @@
+/* ════════════════════════════════════════════════════════════════
+   STYLE.CSS — Stylesheet untuk Aplikasi Nilai Mahasiswa
+   Berisi styling lengkap untuk index.html dan daftar.html
+   ════════════════════════════════════════════════════════════════ */
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 1: RESET & STYLING DASAR                            ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Menghapus margin dan padding default dari semua elemen */
+* {
+  margin: 0;
+  padding: 0;
+  /* Menggunakan border-box agar padding tidak menambah lebar elemen */
+  box-sizing: border-box;
+}
+
+/* Styling dasar untuk body (seluruh halaman) */
+body {
+  /* Menggunakan font Segoe UI, atau Arial jika tidak tersedia */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Ukuran huruf standar 14px */
+  font-size: 14px;
+  /* Warna teks utama adalah abu-abu gelap */
+  color: #333;
+  /* Background halaman berwarna abu-abu muda */
+  background-color: #f5f5f5;
+  /* Memberikan jarak batas di semua sisi halaman */
+  padding: 20px;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 2: HEADER & NAVIGASI                                ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk header (bagian paling atas halaman) */
+.app-header {
+  /* Background header berwarna biru gradien */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Padding di dalam header */
+  padding: 30px 20px;
+  /* Margin bawah header */
+  margin-bottom: 30px;
+  /* Membuat sudut header melengkung */
+  border-radius: 10px;
+  /* Shadow untuk efek kedalaman */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling untuk isi header (judul dan subjudul) */
+.header-isi {
+  /* Margin bawah untuk memberi jarak ke navigasi */
+  margin-bottom: 20px;
+  /* Rata tengah untuk heading */
+  text-align: center;
+}
+
+/* Styling untuk judul aplikasi (h1) */
+.app-judul {
+  /* Ukuran huruf judul adalah 36px */
+  font-size: 36px;
+  /* Warna judul putih */
+  color: white;
+  /* Bold/tebal untuk judul */
+  font-weight: 700;
+  /* Margin bawah judul */
+  margin-bottom: 10px;
+}
+
+/* Styling untuk subjudul aplikasi */
+.app-subjudul {
+  /* Ukuran huruf subjudul adalah 16px */
+  font-size: 16px;
+  /* Warna subjudul putih semi-transparan */
+  color: rgba(255, 255, 255, 0.9);
+  /* Weight huruf lebih ringan */
+  font-weight: 300;
+}
+
+/* Styling untuk navigasi bar (tombol-tombol menu) */
+.nav-bar {
+  /* Display flex untuk menata tombol secara horizontal */
+  display: flex;
+  /* Membungkus ke baris baru jika terlalu panjang */
+  flex-wrap: wrap;
+  /* Memberi jarak antar tombol */
+  gap: 10px;
+  /* Rata tengah untuk navigasi */
+  justify-content: center;
+}
+
+/* Styling untuk tombol navigasi */
+.nav-tombol {
+  /* Background transparan */
+  background-color: transparent;
+  /* Warna teks putih */
+  color: white;
+  /* Padding tombol (atas/bawah 10px, kiri/kanan 20px) */
+  padding: 10px 20px;
+  /* Border putih tebal 2px */
+  border: 2px solid white;
+  /* Sudut melengkung */
+  border-radius: 25px;
+  /* Cursor menjadi pointer saat hover */
+  cursor: pointer;
+  /* Transisi halus saat hover */
+  transition: all 0.3s ease;
+  /* Font weight untuk teks tombol */
+  font-weight: 500;
+  /* Ukuran huruf tombol */
+  font-size: 14px;
+  /* Menghapus dekorasi pada link */
+  text-decoration: none;
+  /* Display inline-block agar dapat diklik dengan baik */
+  display: inline-block;
+}
+
+/* Styling hover tombol navigasi (saat mouse mengarah ke tombol) */
+.nav-tombol:hover {
+  /* Background menjadi putih saat hover */
+  background-color: white;
+  /* Teks menjadi biru saat hover */
+  color: #667eea;
+  /* Shadow saat hover untuk efek angkat */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling untuk tombol yang aktif (halaman saat ini) */
+.nav-tombol.aktif {
+  /* Background putih untuk tombol aktif */
+  background-color: white;
+  /* Teks biru untuk tombol aktif */
+  color: #667eea;
+  /* Font weight lebih tebal untuk tombol aktif */
+  font-weight: 700;
+}
+
+/* Styling khusus untuk tombol hapus semua */
+.tombol-hapus-semua {
+  /* Background merah untuk tombol hapus */
+  background-color: rgba(255, 59, 48, 0.2);
+  /* Border merah untuk tombol hapus */
+  border-color: #ff3b30;
+  /* Teks merah untuk tombol hapus */
+  color: white;
+}
+
+/* Styling hover tombol hapus semua */
+.tombol-hapus-semua:hover {
+  /* Background merah terang saat hover */
+  background-color: #ff3b30;
+  /* Teks tetap putih */
+  color: white;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 3: KONTEN UTAMA                                     ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk konten utama halaman */
+.konten-utama {
+  /* Max-width untuk membatasi lebar konten */
+  max-width: 1200px;
+  /* Margin auto untuk memusatkan konten */
+  margin: 0 auto;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 4: KARTU (CARD)                                     ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk kartu (kotak putih yang berisi konten) */
+.kartu {
+  /* Background putih untuk kartu */
+  background-color: white;
+  /* Padding di dalam kartu */
+  padding: 30px;
+  /* Margin bawah kartu */
+  margin-bottom: 30px;
+  /* Sudut melengkung */
+  border-radius: 10px;
+  /* Shadow untuk efek kedalaman */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling untuk judul kartu */
+.kartu-judul {
+  /* Ukuran huruf judul kartu */
+  font-size: 24px;
+  /* Warna judul kartu */
+  color: #333;
+  /* Font weight untuk judul */
+  font-weight: 700;
+  /* Margin bawah judul */
+  margin-bottom: 10px;
+}
+
+/* Styling untuk keterangan kartu */
+.kartu-keterangan {
+  /* Ukuran huruf keterangan */
+  font-size: 14px;
+  /* Warna teks keterangan abu-abu */
+  color: #666;
+  /* Margin bawah keterangan */
+  margin-bottom: 20px;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 5: FORM & INPUT                                     ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk grid form (tata letak form dengan kolom) */
+.form-grid {
+  /* Display grid untuk mengatur elemen dalam baris dan kolom */
+  display: grid;
+  /* Membagi menjadi 2 kolom (atau 1 di ukuran kecil) */
+  grid-template-columns: 1fr 1fr;
+  /* Jarak antar kolom */
+  gap: 20px;
+}
+
+/* Styling untuk grup form (satu input beserta labelnya) */
+.form-grup {
+  /* Display flex untuk menata label dan input */
+  display: flex;
+  /* Arah kolom (label di atas, input di bawah) */
+  flex-direction: column;
+}
+
+/* Styling untuk label form */
+.form-label {
+  /* Font weight untuk label */
+  font-weight: 600;
+  /* Margin bawah label */
+  margin-bottom: 8px;
+  /* Warna label */
+  color: #333;
+  /* Ukuran huruf label */
+  font-size: 14px;
+}
+
+/* Styling untuk input field (text input, select, dll) */
+.form-input {
+  /* Padding di dalam input */
+  padding: 12px 15px;
+  /* Border abu-abu terang */
+  border: 1px solid #ddd;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Font family sama dengan body */
+  font-family: inherit;
+  /* Ukuran huruf dalam input */
+  font-size: 14px;
+  /* Transisi untuk efek smooth */
+  transition: all 0.3s ease;
+}
+
+/* Styling untuk input saat focus (diklik/aktif) */
+.form-input:focus {
+  /* Outline biru saat focus */
+  outline: 2px solid #667eea;
+  /* Outline offset untuk efek */
+  outline-offset: 0;
+  /* Border biru saat focus */
+  border-color: #667eea;
+  /* Box shadow biru terang untuk focus */
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 6: TOOLBAR (PENCARIAN & FILTER)                     ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk toolbar kartu */
+.toolbar-kartu {
+  /* Padding toolbar */
+  padding: 20px;
+  /* Margin bawah toolbar */
+  margin-bottom: 30px;
+  /* Background toolbar */
+  background-color: white;
+  /* Shadow toolbar */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* Sudut melengkung */
+  border-radius: 10px;
+}
+
+/* Styling untuk baris toolbar */
+.toolbar-baris {
+  /* Display flex untuk menata elemen secara horizontal */
+  display: flex;
+  /* Jarak antar elemen */
+  gap: 20px;
+  /* Flex wrap untuk membungkus di ukuran kecil */
+  flex-wrap: wrap;
+  /* Align items untuk menjajarkan vertikal */
+  align-items: flex-end;
+}
+
+/* Styling untuk grup cari (grup pencarian & filter) */
+.cari-grup {
+  /* Flex grow untuk mengambil ruang tersedia */
+  flex: 1;
+  /* Min width untuk tampilan responsif */
+  min-width: 200px;
+  /* Display flex */
+  display: flex;
+  /* Arah kolom */
+  flex-direction: column;
+}
+
+/* Styling untuk input cari */
+.input-cari {
+  /* Sama dengan form-input */
+  padding: 12px 15px;
+  /* Border */
+  border: 1px solid #ddd;
+  /* Border radius */
+  border-radius: 5px;
+  /* Font family */
+  font-family: inherit;
+  /* Font size */
+  font-size: 14px;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 7: TOMBOL (BUTTON)                                  ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling dasar untuk semua tombol */
+button {
+  /* Font family untuk tombol */
+  font-family: inherit;
+  /* Cursor pointer saat hover */
+  cursor: pointer;
+  /* Transisi halus */
+  transition: all 0.3s ease;
+}
+
+/* Styling untuk tombol simpan/submit */
+.tombol-simpan {
+  /* Background biru */
+  background-color: #667eea;
+  /* Warna teks putih */
+  color: white;
+  /* Padding tombol */
+  padding: 12px 30px;
+  /* Border tidak ada */
+  border: none;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Font weight */
+  font-weight: 600;
+  /* Font size */
+  font-size: 16px;
+}
+
+/* Styling hover tombol simpan */
+.tombol-simpan:hover {
+  /* Background lebih gelap saat hover */
+  background-color: #5568d3;
+  /* Shadow saat hover */
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Styling untuk tombol batal/secondary */
+.tombol-batal {
+  /* Background abu-abu */
+  background-color: #e0e0e0;
+  /* Warna teks gelap */
+  color: #333;
+  /* Padding tombol */
+  padding: 12px 30px;
+  /* Border tidak ada */
+  border: none;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Font weight */
+  font-weight: 600;
+  /* Font size */
+  font-size: 16px;
+}
+
+/* Styling hover tombol batal */
+.tombol-batal:hover {
+  /* Background lebih gelap saat hover */
+  background-color: #d0d0d0;
+}
+
+/* Styling untuk tombol hapus */
+.tombol-hapus {
+  /* Background merah */
+  background-color: #ff3b30;
+  /* Warna teks putih */
+  color: white;
+  /* Padding tombol kecil */
+  padding: 8px 16px;
+  /* Border tidak ada */
+  border: none;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Font size kecil */
+  font-size: 14px;
+}
+
+/* Styling hover tombol hapus */
+.tombol-hapus:hover {
+  /* Background lebih gelap saat hover */
+  background-color: #d93023;
+}
+
+/* Styling untuk tombol bersihkan/reset */
+.tombol-bersihkan {
+  /* Background abu-abu */
+  background-color: #e0e0e0;
+  /* Warna teks gelap */
+  color: #333;
+  /* Padding tombol */
+  padding: 12px 30px;
+  /* Border tidak ada */
+  border: none;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Font weight */
+  font-weight: 600;
+  /* Font size */
+  font-size: 16px;
+}
+
+/* Styling hover tombol bersihkan */
+.tombol-bersihkan:hover {
+  /* Background lebih gelap saat hover */
+  background-color: #d0d0d0;
+  /* Shadow saat hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Styling untuk grup tombol (container tombol) */
+.tombol-grup {
+  /* Display flex untuk menata tombol secara horizontal */
+  display: flex;
+  /* Jarak antar tombol */
+  gap: 15px;
+  /* Flex wrap untuk membungkus di ukuran kecil */
+  flex-wrap: wrap;
+  /* Margin atas untuk jarak dari form */
+  margin-top: 25px;
+}
+
+/* Styling untuk input field saat error */
+.form-input.error {
+  /* Border merah saat error */
+  border-color: #d93023;
+  /* Background terang merah untuk highlight */
+  background-color: #fff5f5;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 8: TABEL                                            ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk tabel */
+table {
+  /* Lebar tabel penuh */
+  width: 100%;
+  /* Collapse border untuk tabel */
+  border-collapse: collapse;
+  /* Margin bawah tabel */
+  margin-top: 20px;
+}
+
+/* Styling untuk header tabel (th) */
+table th {
+  /* Background header biru */
+  background-color: #667eea;
+  /* Warna teks putih */
+  color: white;
+  /* Padding dalam header */
+  padding: 15px;
+  /* Text align kiri */
+  text-align: left;
+  /* Font weight untuk header */
+  font-weight: 600;
+  /* Border bawah */
+  border-bottom: 2px solid #5568d3;
+}
+
+/* Styling untuk baris tabel (td) */
+table td {
+  /* Padding dalam cell */
+  padding: 12px 15px;
+  /* Border bawah abu-abu terang */
+  border-bottom: 1px solid #eee;
+  /* Vertical align tengah */
+  vertical-align: middle;
+}
+
+/* Styling untuk baris tabel saat hover */
+table tbody tr:hover {
+  /* Background terang saat hover */
+  background-color: #f9f9f9;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 9: PESAN & NOTIFIKASI                               ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk pesan error (di bawah input field) */
+.pesan-error {
+  /* Display block untuk menampilkan sebagai elemen blok */
+  display: block;
+  /* Warna teks merah */
+  color: #d93023;
+  /* Font size kecil untuk pesan error */
+  font-size: 12px;
+  /* Margin atas kecil untuk jarak dari input */
+  margin-top: 5px;
+  /* Font weight untuk membuat teks terlihat */
+  font-weight: 500;
+}
+
+/* Styling untuk pesan error yang memiliki isi */
+.pesan-error:not(:empty) {
+  /* Padding untuk pesan yang tidak kosong */
+  padding: 8px 12px;
+  /* Background merah terang */
+  background-color: #ffe0e0;
+  /* Sudut melengkung */
+  border-radius: 4px;
+  /* Margin bawah */
+  margin-bottom: 10px;
+}
+
+/* Styling untuk pesan sukses */
+.pesan-sukses {
+  /* Background hijau terang */
+  background-color: #e0f7e0;
+  /* Warna teks hijau */
+  color: #34a853;
+  /* Padding pesan */
+  padding: 15px;
+  /* Margin bawah pesan */
+  margin-bottom: 20px;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Border kiri hijau */
+  border-left: 4px solid #34a853;
+}
+
+/* Styling untuk pesan warning */
+.pesan-warning {
+  /* Background kuning terang */
+  background-color: #fff3e0;
+  /* Warna teks oranye */
+  color: #f57c00;
+  /* Padding pesan */
+  padding: 15px;
+  /* Margin bawah pesan */
+  margin-bottom: 20px;
+  /* Sudut melengkung */
+  border-radius: 5px;
+  /* Border kiri oranye */
+  border-left: 4px solid #f57c00;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 9.5: PRATINJAU DATA & PANDUAN                       ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Styling untuk kartu ringkasan pratinjau */
+.kartu-ringkasan {
+  /* Background dengan gradient untuk efek menarik */
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  /* Border atas dengan warna gradient */
+  border-top: 4px solid #667eea;
+  /* Box shadow lebih prominent */
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+/* Styling untuk teks kosong pratinjau */
+.teks-kosong {
+  /* Text align tengah */
+  text-align: center;
+  /* Warna abu-abu untuk teks kosong */
+  color: #999;
+  /* Padding untuk ruang */
+  padding: 40px 20px;
+  /* Font style italic untuk penekanan */
+  font-style: italic;
+  /* Font size sedikit lebih kecil */
+  font-size: 14px;
+}
+
+/* ── Styling untuk Kartu Pratinjau Rapi ── */
+
+/* Styling untuk container kartu pratinjau */
+.kartu-pratinjau {
+  /* Background putih */
+  background-color: white;
+  /* Padding untuk ruang internal */
+  padding: 20px;
+  /* Border radius untuk sudut melengkung */
+  border-radius: 8px;
+  /* Border kiri untuk aksen */
+  border-left: 4px solid #667eea;
+  /* Shadow terang */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* Display flex untuk layout vertikal */
+  display: flex;
+  /* Flex direction kolom */
+  flex-direction: column;
+  /* Gap antar elemen */
+  gap: 12px;
+}
+
+/* Styling untuk nama di pratinjau */
+.pratinjau-nama {
+  /* Font size lebih besar */
+  font-size: 18px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Warna teks gelap */
+  color: #333;
+  /* Display flex */
+  display: flex;
+  /* Align items center */
+  align-items: center;
+  /* Gap antara nama dan nim */
+  gap: 8px;
+}
+
+/* Styling untuk NIM dalam pratinjau */
+.pratinjau-nim {
+  /* Font size lebih kecil */
+  font-size: 13px;
+  /* Font weight normal */
+  font-weight: 500;
+  /* Warna abu-abu */
+  color: #666;
+  /* Background terang */
+  background-color: #f0f0f0;
+  /* Padding kecil */
+  padding: 2px 8px;
+  /* Border radius */
+  border-radius: 4px;
+}
+
+/* Styling untuk mata kuliah di pratinjau */
+.pratinjau-matkul {
+  /* Font size 13px */
+  font-size: 13px;
+  /* Font weight 500 */
+  font-weight: 500;
+  /* Warna teks abu-abu */
+  color: #666;
+  /* Display flex */
+  display: flex;
+  /* Align items center */
+  align-items: center;
+  /* Gap kecil */
+  gap: 6px;
+}
+
+/* Styling untuk baris nilai-grade-keterangan */
+.pratinjau-nilai-baris {
+  /* Display flex */
+  display: flex;
+  /* Align items center */
+  align-items: center;
+  /* Gap antar elemen */
+  gap: 12px;
+  /* Background terang */
+  background-color: #f8f9ff;
+  /* Padding */
+  padding: 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Border subtile */
+  border: 1px solid #e8e8f0;
+}
+
+/* Styling untuk angka nilai dalam pratinjau */
+.pratinjau-angka {
+  /* Font size besar */
+  font-size: 28px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Warna biru */
+  color: #667eea;
+  /* Min width */
+  min-width: 45px;
+  /* Text align center */
+  text-align: center;
+}
+
+/* Styling untuk grade badge dalam pratinjau */
+.pratinjau-grade {
+  /* Font size medium */
+  font-size: 14px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 6px 14px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Min width */
+  min-width: 45px;
+  /* Text align center */
+  text-align: center;
+}
+
+/* Grade A dalam pratinjau */
+.pratinjau-grade.grade-a {
+  /* Background hijau */
+  background-color: #27ae60;
+}
+
+/* Grade B dalam pratinjau */
+.pratinjau-grade.grade-b {
+  /* Background biru */
+  background-color: #3498db;
+}
+
+/* Grade C dalam pratinjau */
+.pratinjau-grade.grade-c {
+  /* Background oranye */
+  background-color: #f39c12;
+}
+
+/* Grade D dalam pratinjau */
+.pratinjau-grade.grade-d {
+  /* Background oranye gelap */
+  background-color: #e67e22;
+}
+
+/* Grade E dalam pratinjau */
+.pratinjau-grade.grade-e {
+  /* Background merah */
+  background-color: #e74c3c;
+}
+
+/* Styling untuk keterangan dalam pratinjau */
+.pratinjau-ket {
+  /* Font size 13px */
+  font-size: 13px;
+  /* Font weight 600 */
+  font-weight: 600;
+  /* Warna teks gelap */
+  color: #333;
+  /* Margin left auto untuk push ke kanan */
+  margin-left: auto;
+}
+
+/* Styling untuk tanggal disimpan di pratinjau */
+.pratinjau-tanggal {
+  /* Font size 12px */
+  font-size: 12px;
+  /* Font weight 500 */
+  font-weight: 500;
+  /* Warna abu-abu */
+  color: #888;
+  /* Display flex */
+  display: flex;
+  /* Align items center */
+  align-items: center;
+  /* Gap kecil */
+  gap: 6px;
+  /* Border top untuk separator */
+  border-top: 1px solid #e8e8e8;
+  /* Padding top */
+  padding-top: 10px;
+  /* Margin top */
+  margin-top: 5px;
+}
+
+/* Styling untuk item data pratinjau */
+.pratinjau-item {
+  /* Display grid untuk layout rapi */
+  display: grid;
+  /* 2 kolom untuk desktop */
+  grid-template-columns: 1fr 1fr;
+  /* Gap antar item */
+  gap: 20px;
+  /* Padding dalam item */
+  padding: 20px 0;
+}
+
+/* Styling untuk baris data pratinjau */
+.pratinjau-baris {
+  /* Display flex untuk layout horizontal */
+  display: flex;
+  /* Flex direction kolom untuk vertical */
+  flex-direction: column;
+  /* Gap antara label dan value */
+  gap: 5px;
+}
+
+/* Styling untuk label pratinjau */
+.pratinjau-label {
+  /* Font size kecil */
+  font-size: 12px;
+  /* Font weight untuk tebal */
+  font-weight: 600;
+  /* Warna abu-abu untuk label */
+  color: #666;
+  /* Text transform uppercase untuk emphasis */
+  text-transform: uppercase;
+  /* Letter spacing untuk modern look */
+  letter-spacing: 0.5px;
+}
+
+/* Styling untuk value/isi pratinjau */
+.pratinjau-value {
+  /* Font size lebih besar */
+  font-size: 18px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Warna teks gelap */
+  color: #333;
+}
+
+/* Styling untuk header pratinjau (atas) */
+.pratinjau-header {
+  /* Display flex untuk layout */
+  display: flex;
+  /* Justify between untuk spacing */
+  justify-content: space-between;
+  /* Align items tengah */
+  align-items: center;
+  /* Padding bottom untuk jarak */
+  padding-bottom: 15px;
+  /* Border bottom untuk separator */
+  border-bottom: 2px solid #eee;
+  /* Margin bottom untuk jarak */
+  margin-bottom: 15px;
+}
+
+/* Styling untuk body/konten pratinjau */
+.pratinjau-body {
+  /* Padding untuk spacing */
+  padding: 15px 0;
+}
+
+/* Styling untuk footer pratinjau (bawah) */
+.pratinjau-footer {
+  /* Display flex */
+  display: flex;
+  /* Justify between */
+  justify-content: space-between;
+  /* Align items center */
+  align-items: center;
+  /* Padding top untuk jarak */
+  padding-top: 15px;
+  /* Border top */
+  border-top: 2px solid #eee;
+  /* Margin top */
+  margin-top: 15px;
+  /* Font size sedikit kecil */
+  font-size: 13px;
+  /* Warna abu-abu */
+  color: #666;
+}
+
+/* Styling untuk display nilai dan grade */
+.nilai-display {
+  /* Display flex */
+  display: flex;
+  /* Flex direction kolom */
+  flex-direction: column;
+  /* Align items tengah */
+  align-items: center;
+  /* Gap antar elemen */
+  gap: 8px;
+  /* Padding */
+  padding: 15px;
+  /* Background gradient biru terang */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Warna teks putih */
+  color: white;
+  /* Border radius untuk sudut melengkung */
+  border-radius: 10px;
+  /* Box shadow */
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Styling untuk angka nilai dalam display */
+.nilai-angka {
+  /* Font size besar */
+  font-size: 36px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Line height */
+  line-height: 1;
+}
+
+/* Styling untuk grade letter */
+.grade-letter {
+  /* Font size medium */
+  font-size: 24px;
+  /* Font weight bold */
+  font-weight: 700;
+}
+
+/* Styling untuk keterangan grade */
+.grade-keterangan {
+  /* Font size kecil */
+  font-size: 12px;
+  /* Opacity untuk subtle */
+  opacity: 0.9;
+}
+
+/* ── Styling untuk Tabel Panduan Grade ── */
+
+/* Styling untuk container tabel panduan */
+.tabel-panduan {
+  /* Display grid */
+  display: grid;
+  /* Auto flow untuk flexible */
+  gap: 12px;
+  /* Margin top untuk jarak */
+  margin-top: 20px;
+}
+
+/* Styling untuk baris panduan */
+.baris-panduan {
+  /* Display grid 4 kolom */
+  display: grid;
+  /* Grid template columns */
+  grid-template-columns: repeat(4, 1fr);
+  /* Padding dalam baris */
+  padding: 16px;
+  /* Align items center */
+  align-items: center;
+  /* Background putih */
+  background-color: white;
+  /* Border radius */
+  border-radius: 8px;
+  /* Transisi untuk hover effect */
+  transition: all 0.3s ease;
+  /* Box shadow terang */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Border kiri untuk aksen */
+  border-left: 4px solid #ddd;
+}
+
+/* Styling untuk baris panduan saat hover */
+.baris-panduan:hover {
+  /* Shadow lebih besar saat hover */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  /* Transform scale untuk zoom */
+  transform: translateY(-2px);
+}
+
+/* Styling untuk header panduan */
+.header-panduan {
+  /* Background biru */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Warna teks putih */
+  color: white;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Font size lebih besar */
+  font-size: 14px;
+  /* Border none untuk header */
+  border: none;
+  /* Tidak ada shadow untuk header */
+  box-shadow: none;
+}
+
+/* Styling untuk span dalam tabel panduan */
+.baris-panduan span {
+  /* Text align center */
+  text-align: center;
+  /* Font size */
+  font-size: 14px;
+}
+
+/* Styling untuk grade A */
+.grade-a {
+  /* Background hijau */
+  background-color: #27ae60;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 8px 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Display inline block */
+  display: inline-block;
+}
+
+/* Styling untuk grade B */
+.grade-b {
+  /* Background biru */
+  background-color: #3498db;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 8px 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Display inline block */
+  display: inline-block;
+}
+
+/* Styling untuk grade C */
+.grade-c {
+  /* Background oranye */
+  background-color: #f39c12;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 8px 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Display inline block */
+  display: inline-block;
+}
+
+/* Styling untuk grade D */
+.grade-d {
+  /* Background oranye gelap */
+  background-color: #e67e22;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 8px 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Display inline block */
+  display: inline-block;
+}
+
+/* Styling untuk grade E */
+.grade-e {
+  /* Background merah */
+  background-color: #e74c3c;
+  /* Warna teks putih */
+  color: white;
+  /* Padding */
+  padding: 8px 12px;
+  /* Border radius */
+  border-radius: 6px;
+  /* Font weight bold */
+  font-weight: 700;
+  /* Display inline block */
+  display: inline-block;
+}
+
+/* Styling untuk footer aplikasi */
+.app-footer {
+  /* Text align center */
+  text-align: center;
+  /* Padding */
+  padding: 20px;
+  /* Margin top */
+  margin-top: 40px;
+  /* Warna teks abu-abu */
+  color: #666;
+  /* Border top untuk separator */
+  border-top: 1px solid #ddd;
+  /* Font size kecil */
+  font-size: 13px;
+}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  BAGIAN 10: RESPONSIVE DESIGN (Mobile Friendly)             ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* Media query untuk ukuran layar kecil (tablet & mobile) */
+@media (max-width: 768px) {
+  /* Body padding untuk mobile */
+  body {
+    /* Padding lebih kecil untuk mobile */
+    padding: 10px;
+  }
+
+  /* Form grid untuk mobile jadi 1 kolom */
+  .form-grid {
+    /* Display grid 1 kolom */
+    grid-template-columns: 1fr;
+    /* Gap lebih kecil */
+    gap: 15px;
+  }
+
+  /* Judul untuk mobile */
+  .app-judul {
+    /* Font size lebih kecil untuk mobile */
+    font-size: 28px;
+  }
+
+  /* Toolbar untuk mobile */
+  .toolbar-baris {
+    /* Flex direction kolom untuk mobile */
+    flex-direction: column;
+    /* Align items stretch */
+    align-items: stretch;
+  }
+
+  /* Cari grup untuk mobile */
+  .cari-grup {
+    /* Width 100% untuk mobile */
+    width: 100%;
+  }
+
+  /* Header untuk mobile */
+  .app-header {
+    /* Padding lebih kecil untuk mobile */
+    padding: 20px 15px;
+    /* Margin bawah lebih kecil */
+    margin-bottom: 20px;
+  }
+
+  /* Tabel untuk mobile */
+  table {
+    /* Font size lebih kecil untuk mobile */
+    font-size: 12px;
+  }
+
+  /* Header tabel untuk mobile */
+  table th {
+    /* Padding lebih kecil */
+    padding: 10px;
+  }
+
+  /* Cell tabel untuk mobile */
+  table td {
+    /* Padding lebih kecil */
+    padding: 8px;
+  }
+
+  /* Tombol grup untuk mobile */
+  .tombol-grup {
+    /* Direction kolom untuk mobile */
+    flex-direction: column;
+    /* Width 100% untuk mobile */
+    width: 100%;
+  }
+
+  /* Tombol untuk mobile */
+  .tombol-simpan,
+  .tombol-bersihkan,
+  .tombol-batal,
+  .tombol-hapus {
+    /* Width 100% untuk mobile */
+    width: 100%;
+  }
+
+  /* Kartu pratinjau untuk mobile */
+  .kartu-pratinjau {
+    /* Padding lebih kecil */
+    padding: 15px;
+    /* Gap lebih kecil */
+    gap: 10px;
+  }
+
+  /* Nama pratinjau untuk mobile */
+  .pratinjau-nama {
+    /* Font size lebih kecil */
+    font-size: 16px;
+  }
+
+  /* Baris nilai pratinjau untuk mobile */
+  .pratinjau-nilai-baris {
+    /* Flex wrap untuk wrap */
+    flex-wrap: wrap;
+    /* Padding lebih kecil */
+    padding: 10px;
+  }
+
+  /* Angka nilai pratinjau untuk mobile */
+  .pratinjau-angka {
+    /* Font size lebih kecil */
+    font-size: 24px;
+  }
+
+  /* Grade pratinjau untuk mobile */
+  .pratinjau-grade {
+    /* Font size lebih kecil */
+    font-size: 12px;
+    /* Padding lebih kecil */
+    padding: 5px 10px;
+  }
+
+  /* Keterangan pratinjau untuk mobile */
+  .pratinjau-ket {
+    /* Width 100% untuk mobile */
+    width: 100%;
+    /* Margin left 0 */
+    margin-left: 0;
+    /* Text align right */
+    text-align: right;
+  }
+
+  /* Tanggal pratinjau untuk mobile */
+  .pratinjau-tanggal {
+    /* Font size lebih kecil */
+    font-size: 11px;
+  }
+
+  /* Pratinjau item untuk mobile */
+  .pratinjau-item {
+    /* Grid template columns 1 kolom */
+    grid-template-columns: 1fr;
+    /* Gap lebih kecil */
+    gap: 15px;
+  }
+
+  /* Baris panduan untuk mobile/tablet */
+  .baris-panduan {
+    /* Grid template columns 2 kolom */
+    grid-template-columns: repeat(2, 1fr);
+    /* Padding lebih kecil */
+    padding: 12px;
+    /* Font size lebih kecil */
+    font-size: 12px;
+  }
+
+  /* Nilai display untuk mobile */
+  .nilai-display {
+    /* Padding lebih kecil */
+    padding: 12px;
+  }
+
+  /* Angka nilai untuk mobile */
+  .nilai-angka {
+    /* Font size lebih kecil */
+    font-size: 28px;
+  }
+
+  /* Grade letter untuk mobile */
+  .grade-letter {
+    /* Font size lebih kecil */
+    font-size: 20px;
+  }
+}
+
+/* Media query untuk ukuran layar sangat kecil (phone kecil) */
+@media (max-width: 480px) {
+  /* Judul untuk phone kecil */
+  .app-judul {
+    /* Font size lebih kecil */
+    font-size: 22px;
+  }
+
+  /* Kartu untuk phone kecil */
+  .kartu {
+    /* Padding lebih kecil */
+    padding: 20px;
+    /* Margin bawah lebih kecil */
+    margin-bottom: 20px;
+  }
+
+  /* Tombol navigasi untuk phone kecil */
+  .nav-tombol {
+    /* Padding lebih kecil */
+    padding: 8px 12px;
+    /* Font size lebih kecil */
+    font-size: 12px;
+  }
+
+  /* Input form untuk phone kecil */
+  .form-input {
+    /* Padding lebih kecil */
+    padding: 10px 12px;
+    /* Font size lebih kecil */
+    font-size: 14px;
+  }
+
+  /* Kartu pratinjau untuk phone kecil */
+  .kartu-pratinjau {
+    /* Padding lebih kecil */
+    padding: 12px;
+    /* Gap lebih kecil */
+    gap: 8px;
+  }
+
+  /* Nama pratinjau untuk phone kecil */
+  .pratinjau-nama {
+    /* Font size lebih kecil */
+    font-size: 15px;
+    /* Flex wrap wrap */
+    flex-wrap: wrap;
+  }
+
+  /* Baris nilai pratinjau untuk phone kecil */
+  .pratinjau-nilai-baris {
+    /* Flex direction kolom */
+    flex-direction: column;
+    /* Align items stretch */
+    align-items: stretch;
+    /* Padding lebih kecil */
+    padding: 8px;
+  }
+
+  /* Angka nilai pratinjau untuk phone kecil */
+  .pratinjau-angka {
+    /* Font size lebih kecil */
+    font-size: 20px;
+    /* Text align center */
+    text-align: center;
+  }
+
+  /* Grade pratinjau untuk phone kecil */
+  .pratinjau-grade {
+    /* Font size lebih kecil */
+    font-size: 11px;
+    /* Padding lebih kecil */
+    padding: 4px 8px;
+    /* Text align center */
+    text-align: center;
+  }
+
+  /* Keterangan pratinjau untuk phone kecil */
+  .pratinjau-ket {
+    /* Font size lebih kecil */
+    font-size: 12px;
+    /* Text align center */
+    text-align: center;
+  }
+
+  /* Tanggal pratinjau untuk phone kecil */
+  .pratinjau-tanggal {
+    /* Font size lebih kecil */
+    font-size: 10px;
+  }
+
+  /* Baris panduan untuk phone kecil */
+  .baris-panduan {
+    /* Grid template columns 1 kolom */
+    grid-template-columns: 1fr;
+    /* Padding lebih kecil */
+    padding: 10px;
+  }
+
+  /* Pratinjau item untuk phone kecil */
+  .pratinjau-item {
+    /* Grid template columns 1 kolom */
+    grid-template-columns: 1fr;
+    /* Gap lebih kecil */
+    gap: 10px;
+  }
+
+  /* Nilai display untuk phone kecil */
+  .nilai-display {
+    /* Padding lebih kecil */
+    padding: 10px;
+  }
+
+  /* Angka nilai untuk phone kecil */
+  .nilai-angka {
+    /* Font size lebih kecil */
+    font-size: 24px;
+  }
+
+  /* Grade letter untuk phone kecil */
+  .grade-letter {
+    /* Font size lebih kecil */
+    font-size: 18px;
+  }
+
+  /* Label pratinjau untuk phone kecil */
+  .pratinjau-label {
+    /* Font size lebih kecil */
+    font-size: 11px;
+  }
+
+  /* Value pratinjau untuk phone kecil */
+  .pratinjau-value {
+    /* Font size lebih kecil */
+    font-size: 16px;
+  }
+}

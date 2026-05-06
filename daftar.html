@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║   File: daftar.html  (Halaman Daftar & Kelola Nilai)         ║
+  ║                                                              ║
+  ║   Yang dipelajari di halaman ini:                            ║
+  ║   - Cara menampilkan data dari localStorage ke tabel         ║
+  ║   - Cara loop (perulangan) untuk membuat baris tabel         ║
+  ║   - Cara mencari/filter data dengan JavaScript               ║
+  ║   - Cara menghapus satu item dari array                      ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📋 Daftar Nilai</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div class="header-isi">
+      <h1 class="app-judul">📊 Nilai Mahasiswa</h1>
+      <p class="app-subjudul">Aplikasi pencatatan dan pengelolaan nilai</p>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html"     class="nav-tombol">📝 Input Nilai</a>
+      <a href="daftar.html"    class="nav-tombol aktif">📋 Daftar Nilai</a>
+      <a href="statistik.html" class="nav-tombol">📈 Statistik</a>
+      <button class="nav-tombol tombol-hapus-semua"
+              onclick="konfirmasiHapusSemua()">
+        🗑️ Hapus Semua
+      </button>
+    </nav>
+  </header>
+
+
+  <main class="konten-utama">
+
+    <!-- ── TOOLBAR: Pencarian dan Filter ── -->
+    <div class="kartu toolbar-kartu">
+      <div class="toolbar-baris">
+
+        <!-- Kotak Pencarian -->
+        <div class="cari-grup">
+          <label class="form-label">🔍 Cari berdasarkan nama atau NIM:</label>
+          <input
+            type="text"
+            id="input-cari"
+            class="form-input input-cari"
+            placeholder="Ketik nama atau NIM..."
+            oninput="cariData()"
+          >
+        </div>
+
+        <!-- Filter Mata Kuliah -->
+        <div class="cari-grup">
+          <label class="form-label">📚 Filter mata kuliah:</label>
+          <select
+            id="filter-matkul"
+            class="form-input"
+            onchange="cariData()"
+          >
+            <option value="">-- Semua Mata Kuliah --</option>
+            <option value="Pemrograman Web">Pemrograman Web</option>
+            <option value="Basis Data">Basis Data</option>
+            <option value="Algoritma">Algoritma & Pemrograman</option>
+            <option value="Jaringan Komputer">Jaringan Komputer</option>
+            <option value="Sistem Operasi">Sistem Operasi</option>
+            <option value="Matematika Diskrit">Matematika Diskrit</option>
+          </select>
+        </div>
+
+        <!-- Filter Grade -->
+        <div class="cari-grup">
+          <label class="form-label">🎯 Filter grade:</label>
+          <select id="filter-grade" class="form-input" onchange="cariData()">
+            <option value="">-- Semua Grade --</option>
+            <option value="A">Grade A</option>
+            <option value="B">Grade B</option>
+            <option value="C">Grade C</option>
+            <option value="D">Grade D</option>
+            <option value="E">Grade E</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Info hasil pencarian — diperbarui oleh JS -->
+      <p id="info-hasil" class="info-hasil"></p>
+    </div>
+
+
+    <!-- ── TABEL DAFTAR NILAI ── -->
+    <div class="kartu">
+      <h2 class="kartu-judul">📋 Daftar Semua Nilai</h2>
+
+      <!-- Div ini akan berisi tabel atau pesan kosong, diisi oleh JS -->
+      <div id="area-tabel">
+        <p class="teks-kosong">⏳ Memuat data...</p>
+      </div>
+    </div>
+
+  </main>
+
+
+  <footer class="app-footer">
+    <p>📊 Aplikasi Nilai Mahasiswa · Studi Kasus Pemrograman Web Semester 2</p>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════════
+       EMBEDDED JAVASCRIPT — Khusus halaman daftar.html
+  ══════════════════════════════════════════════════ -->
+  <script>
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 1: VARIABEL GLOBAL HALAMAN INI
+    // Variabel di luar fungsi bisa diakses oleh semua fungsi
+    // di bawahnya (dalam file/script yang sama).
+    // ════════════════════════════════════════════════════════════
+
+    // Menyimpan SEMUA data yang dibaca dari localStorage
+    var semuaData = [];
+
+    // Menyimpan data yang SEDANG DITAMPILKAN (setelah filter/cari)
+    var dataTampil = [];
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 2: FUNGSI MEMBACA DATA
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: muatData
+    // Tujuan : Membaca data dari localStorage dan
+    //          menyimpannya ke variabel semuaData
+    // ─────────────────────────────────────────────
+    function muatData() {
+
+      var dataJSON = localStorage.getItem("data-nilai");
+
+      if (dataJSON !== null) {
+        // Ada data → parse dari JSON ke array JavaScript
+        semuaData = JSON.parse(dataJSON);
+      } else {
+        // Belum ada data → array kosong
+        semuaData = [];
+      }
+
+      // Salin semua data ke dataTampil (awalnya menampilkan semua)
+      // Spread operator [...array] = membuat salinan array baru
+      // (bukan referensi ke array yang sama)
+      dataTampil = [...semuaData];
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 3: FUNGSI PENCARIAN DAN FILTER
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: cariData
+    // Tujuan : Menyaring data berdasarkan teks pencarian
+    //          dan dropdown filter, lalu render ulang tabel
+    // Dipanggil setiap kali user mengetik di kotak cari
+    // atau mengubah dropdown filter.
+    // ─────────────────────────────────────────────
+    function cariData() {
+
+      // Ambil nilai dari kotak cari dan filter
+      var keyword = document.getElementById("input-cari").value.trim();
+      var filterMatkul = document.getElementById("filter-matkul").value;
+      var filterGrade  = document.getElementById("filter-grade").value;
+
+      // Ubah keyword ke huruf kecil agar pencarian tidak case-sensitive
+      // Contoh: "budi" dan "Budi" dianggap sama
+      var keywordKecil = keyword.toLowerCase();
+
+      // Array.filter() → membuat array BARU berisi item yang lolos kondisi
+      // Cara kerja: setiap item dicek satu per satu,
+      // jika fungsi kondisi return true → item masuk array baru
+      // jika return false → item tidak masuk
+      dataTampil = semuaData.filter(function(item) {
+
+        // Kondisi 1: Cocok dengan pencarian nama ATAU NIM
+        // .includes() → mengecek apakah string mengandung teks tertentu
+        var cocokCari = true; // anggap cocok jika keyword kosong
+        if (keyword !== "") {
+          var namaKecil = item.nama.toLowerCase();
+          var nimKecil  = item.nim.toLowerCase();
+          // Cocok jika nama ATAU nim mengandung keyword
+          cocokCari = namaKecil.includes(keywordKecil) || nimKecil.includes(keywordKecil);
+        }
+
+        // Kondisi 2: Cocok dengan filter mata kuliah
+        var cocokMatkul = true; // anggap cocok jika tidak ada filter
+        if (filterMatkul !== "") {
+          cocokMatkul = item.matkul === filterMatkul;
+          // === → perbandingan persis (sama nilai DAN sama tipe data)
+        }
+
+        // Kondisi 3: Cocok dengan filter grade
+        var cocokGrade = true;
+        if (filterGrade !== "") {
+          cocokGrade = item.grade === filterGrade;
+        }
+
+        // Item hanya masuk jika SEMUA kondisi terpenuhi
+        // && = AND (dan) — semua harus true
+        return cocokCari && cocokMatkul && cocokGrade;
+      });
+
+      // Render ulang tabel dengan data yang sudah difilter
+      renderTabel();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 4: FUNGSI MENAMPILKAN TABEL (RENDER)
+    // "Render" = proses menggambar/menampilkan data ke layar
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: renderTabel
+    // Tujuan : Membuat HTML tabel dari array dataTampil
+    //          dan menampilkannya ke halaman
+    // ─────────────────────────────────────────────
+    function renderTabel() {
+
+      var area = document.getElementById("area-tabel");
+      var infoHasil = document.getElementById("info-hasil");
+
+      // Perbarui info jumlah hasil
+      infoHasil.textContent = "Menampilkan " + dataTampil.length + " dari " + semuaData.length + " data";
+
+      // Jika tidak ada data sama sekali
+      if (semuaData.length === 0) {
+        area.innerHTML =
+          '<div class="pesan-kosong">' +
+            '<div class="pesan-kosong-icon">📭</div>' +
+            '<p>Belum ada data nilai tersimpan.</p>' +
+            '<a href="index.html" class="tombol-simpan" style="display:inline-block;text-decoration:none">+ Tambah Data Pertama</a>' +
+          '</div>';
+        return; // hentikan fungsi di sini
+      }
+
+      // Jika ada data tapi tidak ada yang cocok dengan filter
+      if (dataTampil.length === 0) {
+        area.innerHTML =
+          '<div class="pesan-kosong">' +
+            '<div class="pesan-kosong-icon">🔍</div>' +
+            '<p>Tidak ada data yang cocok dengan pencarian.</p>' +
+          '</div>';
+        return;
+      }
+
+      // Ada data → buat tabel HTML
+      // Kita buat string HTML panjang lalu masukkan sekaligus dengan innerHTML
+
+      var htmlTabel = '<div class="tabel-wrapper">';
+      htmlTabel += '<table class="tabel-nilai">';
+
+      // ── Buat baris header tabel ──
+      htmlTabel += '<thead>';
+      htmlTabel += '<tr>';
+      htmlTabel += '  <th>No</th>';
+      htmlTabel += '  <th>Nama Mahasiswa</th>';
+      htmlTabel += '  <th>NIM</th>';
+      htmlTabel += '  <th>Mata Kuliah</th>';
+      htmlTabel += '  <th>Smt</th>';
+      htmlTabel += '  <th>Nilai</th>';
+      htmlTabel += '  <th>Grade</th>';
+      htmlTabel += '  <th>Keterangan</th>';
+      htmlTabel += '  <th>Aksi</th>';
+      htmlTabel += '</tr>';
+      htmlTabel += '</thead>';
+
+      // ── Buat baris data tabel dengan LOOP ──
+      htmlTabel += '<tbody>';
+
+      // Loop FOR: mengulang kode sebanyak dataTampil.length kali
+      // i = penghitung, mulai dari 0, bertambah 1 (i++) setiap putaran
+      // loop berhenti ketika i >= panjang array (i < dataTampil.length)
+      for (var i = 0; i < dataTampil.length; i++) {
+
+        // dataTampil[i] = item ke-i dari array (mulai dari index 0)
+        var item = dataTampil[i];
+
+        // Tambahkan class "baris-lulus" atau "baris-tidak-lulus"
+        // untuk mewarnai baris berbeda
+        var classBaris = item.grade === "E" ? "baris-tidak-lulus" : "baris-lulus";
+
+        htmlTabel += '<tr class="' + classBaris + '">';
+        htmlTabel += '  <td class="td-no">' + (i + 1) + '</td>';
+        // (i + 1) → nomor urut dimulai dari 1, bukan 0
+
+        htmlTabel += '  <td class="td-nama"><strong>' + item.nama + '</strong></td>';
+        htmlTabel += '  <td class="td-nim">' + item.nim + '</td>';
+        htmlTabel += '  <td class="td-matkul">' + item.matkul + '</td>';
+        htmlTabel += '  <td class="td-smt">' + item.semester + '</td>';
+        htmlTabel += '  <td class="td-nilai">' + item.nilai + '</td>';
+        htmlTabel += '  <td class="td-grade"><span class="badge-grade grade-' + item.grade.toLowerCase() + '">' + item.grade + '</span></td>';
+        htmlTabel += '  <td class="td-ket">' + item.keterangan + '</td>';
+
+        // Tombol hapus satu data — gunakan item.id agar tahu mana yang dihapus
+        // INLINE JS: onclick memanggil fungsi hapusSatuData dengan id item
+        htmlTabel += '  <td class="td-aksi">';
+        htmlTabel += '    <button class="tombol-hapus-baris" onclick="hapusSatuData(' + item.id + ')" title="Hapus data ini">🗑️</button>';
+        htmlTabel += '  </td>';
+
+        htmlTabel += '</tr>';
+      }
+
+      htmlTabel += '</tbody>';
+      htmlTabel += '</table>';
+      htmlTabel += '</div>'; // akhir tabel-wrapper
+
+      // Masukkan semua HTML tabel ke halaman sekaligus
+      area.innerHTML = htmlTabel;
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 5: FUNGSI HAPUS DATA
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: hapusSatuData
+    // Tujuan : Menghapus SATU data berdasarkan ID-nya
+    // Input  : id (number — ID unik data yang akan dihapus)
+    //
+    // CARA KERJA:
+    // Array.filter() digunakan untuk membuat array BARU
+    // yang TIDAK mengandung item dengan id tersebut.
+    // Seperti "menyalin semua data kecuali yang ini".
+    // ─────────────────────────────────────────────
+    function hapusSatuData(id) {
+
+      var yakin = confirm("Yakin hapus data ini?");
+      if (!yakin) return; // batal jika user klik Cancel
+
+      // Baca data terbaru dari localStorage
+      var dataJSON = localStorage.getItem("data-nilai");
+      var data = dataJSON ? JSON.parse(dataJSON) : [];
+
+      // Filter: simpan semua item KECUALI yang id-nya sama dengan parameter
+      // item.id !== id → true = pertahankan, false = buang
+      var dataBaru = data.filter(function(item) {
+        return item.id !== id;
+      });
+
+      // Simpan data yang sudah dihapus satu item
+      localStorage.setItem("data-nilai", JSON.stringify(dataBaru));
+
+      // Update variabel global
+      semuaData = dataBaru;
+
+      // Jalankan ulang pencarian agar tabel diperbarui
+      cariData();
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: konfirmasiHapusSemua
+    // (Sama dengan di index.html — dalam proyek nyata ada di app.js)
+    // ─────────────────────────────────────────────
+    function konfirmasiHapusSemua() {
+      var yakin = confirm("⚠️ Yakin ingin menghapus SEMUA data nilai?\n\nAksi ini tidak bisa dibatalkan.");
+      if (yakin) {
+        localStorage.removeItem("data-nilai");
+        alert("✅ Semua data berhasil dihapus.");
+        location.reload();
+      }
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // INISIALISASI: Jalankan saat halaman siap
+    // ════════════════════════════════════════════════════════════
+    document.addEventListener("DOMContentLoaded", function() {
+
+      // Muat data dari localStorage
+      muatData();
+
+      // Tampilkan tabel (tanpa filter apapun)
+      renderTabel();
+
+    });
+
+  </script>
+
+  <script src="app.js"></script>
+
+</body>
+</html>

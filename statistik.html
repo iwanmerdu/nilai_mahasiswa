@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📈 Statistik Nilai</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-isi">
+      <h1 class="app-judul">📊 Nilai Mahasiswa</h1>
+      <p class="app-subjudul">Aplikasi pencatatan dan pengelolaan nilai</p>
+    </div>
+    <nav class="nav-bar">
+      <a href="index.html"     class="nav-tombol">📝 Input Nilai</a>
+      <a href="daftar.html"    class="nav-tombol">📋 Daftar Nilai</a>
+      <a href="statistik.html" class="nav-tombol aktif">📈 Statistik</a>
+      <button class="nav-tombol tombol-hapus-semua" onclick="konfirmasiHapusSemua()">
+        🗑️ Hapus Semua
+      </button>
+    </nav>
+  </header>
+
+  <main class="konten-utama">
+    <div class="kartu">
+      <h2 class="kartu-judul">📈 Statistik Nilai Mahasiswa</h2>
+      <div id="statistik-ringkas" class="statistik-ringkas">
+        <!-- Statistik ringkas (jumlah data, rata-rata, dsb) akan diisi oleh JS -->
+      </div>
+      <div id="statistik-grade" class="statistik-grade">
+        <!-- Distribusi grade (A, B, C, D, E) akan diisi oleh JS -->
+      </div>
+      <div id="statistik-matkul" class="statistik-matkul">
+        <!-- Statistik per mata kuliah akan diisi oleh JS -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>📊 Aplikasi Nilai Mahasiswa · Studi Kasus Pemrograman Web Semester 2</p>
+  </footer>
+
+  <!-- Chart.js CDN for rendering charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Fungsi untuk mengambil data dari localStorage
+    function ambilSemuaData() {
+      var dataJSON = localStorage.getItem("data-nilai");
+      if (dataJSON !== null) {
+        return JSON.parse(dataJSON);
+      } else {
+        return [];
+      }
+    }
+
+    // Fungsi untuk menghitung statistik ringkas
+    function tampilkanStatistikRingkas(data) {
+      var jumlah = data.length;
+      var rata2 = jumlah > 0 ? (data.reduce((a, b) => a + (b.nilai || 0), 0) / jumlah).toFixed(2) : 0;
+      document.getElementById("statistik-ringkas").innerHTML = `
+        <div class="pratinjau-item">
+          <div class="pratinjau-baris">
+            <span class="pratinjau-label">Jumlah Data</span>
+            <span class="pratinjau-value">${jumlah}</span>
+          </div>
+          <div class="pratinjau-baris">
+            <span class="pratinjau-label">Rata-rata Nilai</span>
+            <span class="pratinjau-value">${rata2}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Fungsi untuk menghitung distribusi grade dan menggambar grafik
+    var _gradeChart = null; // chart instance
+    function tampilkanStatistikGrade(data) {
+      // Hitung jumlah tiap grade dengan pasti
+      var grades = {A:0, B:0, C:0, D:0, E:0};
+      data.forEach(function(d) {
+        var g = (d.grade || '').toUpperCase();
+        if (grades.hasOwnProperty(g)) grades[g]++;
+      });
+
+      // Tampilkan daftar grade + jumlah
+      var gradeHtml = '<h3>Distribusi Grade</h3>' +
+        '<div class="pratinjau-item">';
+      Object.keys(grades).forEach(function(g) {
+        gradeHtml += '<div class="pratinjau-baris">' +
+          '<span class="pratinjau-label">Grade ' + g + '</span>' +
+          '<span class="pratinjau-grade grade-' + g.toLowerCase() + '">' + g + '</span>' +
+          '<span class="pratinjau-value">' + grades[g] + '</span>' +
+          '</div>';
+      });
+      gradeHtml += '</div>' +
+        '<canvas id="gradeChart" height="120"></canvas>';
+
+      document.getElementById('statistik-grade').innerHTML = gradeHtml;
+
+      // Siapkan data untuk Chart.js
+      var labels = Object.keys(grades);
+      var values = labels.map(function(l){ return grades[l]; });
+      var colors = ['#27ae60','#3498db','#f39c12','#e67e22','#e74c3c'];
+
+      // Jika chart sudah ada, update datanya
+      var ctx = document.getElementById('gradeChart').getContext('2d');
+      if (_gradeChart) {
+        _gradeChart.data.labels = labels;
+        _gradeChart.data.datasets[0].data = values;
+        _gradeChart.update();
+      } else {
+        _gradeChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Jumlah Mahasiswa',
+              data: values,
+              backgroundColor: colors,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+          }
+        });
+      }
+    }
+
+    // Fungsi untuk statistik per mata kuliah
+    function tampilkanStatistikMatkul(data) {
+      var matkulMap = {};
+      data.forEach(d => {
+        if (!matkulMap[d.matkul]) matkulMap[d.matkul] = [];
+        matkulMap[d.matkul].push(d.nilai);
+      });
+      document.getElementById("statistik-matkul").innerHTML = `
+        <h3>Statistik per Mata Kuliah</h3>
+        <div class="pratinjau-item">
+          ${Object.entries(matkulMap).map(([matkul, nilaiArr]) => `
+            <div class="pratinjau-baris">
+              <span class="pratinjau-label">${matkul}</span>
+              <span class="pratinjau-value">
+                Rata-rata: ${(nilaiArr.reduce((a,b)=>a+b,0)/nilaiArr.length).toFixed(2)}
+              </span>
+              <span class="pratinjau-label">Jumlah: ${nilaiArr.length}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Jalankan saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", function() {
+      var data = ambilSemuaData();
+      tampilkanStatistikRingkas(data);
+      tampilkanStatistikGrade(data);
+      tampilkanStatistikMatkul(data);
+    });
+
+    // Fungsi hapus semua (opsional, sesuaikan dengan implementasi Anda)
+    function konfirmasiHapusSemua() {
+      if (confirm("Yakin ingin menghapus semua data nilai?")) {
+        localStorage.removeItem("data-nilai");
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

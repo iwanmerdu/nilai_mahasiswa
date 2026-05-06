@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║   STUDI KASUS PEMULA — PEMROGRAMAN WEB SEMESTER 2            ║
+  ║   Judul   : Aplikasi Daftar Nilai Mahasiswa                  ║
+  ║   File    : index.html  (Halaman Utama — Input Nilai)        ║
+  ╚══════════════════════════════════════════════════════════════╝
+
+  TUJUAN BELAJAR:
+  Setelah mempelajari kode ini, mahasiswa diharapkan memahami:
+  1. Cara HTML, CSS, dan JavaScript bekerja bersama
+  2. Cara mengambil nilai dari input form dengan JavaScript
+  3. Cara menyimpan dan membaca data dari localStorage
+  4. Cara membuat logika IF untuk menentukan grade nilai
+  5. Cara menampilkan data ke halaman menggunakan innerHTML
+-->
+
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- UTF-8 agar huruf seperti 'é', 'ñ', dll bisa ditampilkan -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Agar tampilan tidak "kecil" di layar handphone -->
+
+  <title>📊 Nilai Mahasiswa</title>
+
+  <!-- Menghubungkan file CSS eksternal (style.css) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ┌─────────────────────────────────────────────────┐
+       │  HEADER — Judul aplikasi di bagian atas halaman │
+       └─────────────────────────────────────────────────┘ -->
+  <header class="app-header">
+    <div class="header-isi">
+      <h1 class="app-judul">📊 Nilai Mahasiswa</h1>
+      <p class="app-subjudul">Aplikasi pencatatan dan pengelolaan nilai</p>
+    </div>
+
+    <!-- NAVIGASI antar halaman -->
+    <nav class="nav-bar">
+
+      <!-- class="aktif" menandai halaman yang sedang dibuka -->
+      <a href="index.html"    class="nav-tombol aktif">📝 Input Nilai</a>
+      <a href="daftar.html"   class="nav-tombol">📋 Daftar Nilai</a>
+      <a href="statistik.html" class="nav-tombol">📈 Statistik</a>
+
+      <!-- ════════════════════════════════════════════════
+           JAVASCRIPT JENIS 1 — INLINE JS
+           Ditulis langsung di atribut HTML (onclick, dll)
+           Cocok untuk aksi SINGKAT dan SEDERHANA.
+           ════════════════════════════════════════════════
+           onclick="..." artinya: "jalankan kode JS ini
+           ketika tombol ini diklik oleh pengguna"
+      -->
+      <button class="nav-tombol tombol-hapus-semua"
+              onclick="konfirmasiHapusSemua()">
+        🗑️ Hapus Semua
+      </button>
+
+    </nav>
+  </header>
+
+
+  <!-- ┌─────────────────────────────────────────────────┐
+       │  KONTEN UTAMA HALAMAN                           │
+       └─────────────────────────────────────────────────┘ -->
+  <main class="konten-utama">
+
+    <!-- ── KARTU FORM INPUT NILAI ── -->
+    <div class="kartu">
+      <h2 class="kartu-judul">✏️ Tambah Data Nilai</h2>
+      <p class="kartu-keterangan">Isi semua kolom di bawah ini, lalu klik tombol Simpan.</p>
+
+      <!-- FORM INPUT
+           Form ini TIDAK menggunakan action/method karena kita proses
+           datanya dengan JavaScript, bukan dikirim ke server.
+      -->
+      <div class="form-grid">
+
+        <!-- Input Nama -->
+        <!-- ════════════════════════════════════════════
+             INLINE JS — oninput
+             Dijalankan SETIAP KALI isi input berubah.
+             Di sini kita hapus tanda merah (error)
+             begitu user mulai mengetik.
+        ═════════════════════════════════════════════ -->
+        <div class="form-grup">
+          <label for="input-nama" class="form-label">👤 Nama Mahasiswa</label>
+          <input
+            type="text"
+            id="input-nama"
+            class="form-input"
+            placeholder="Contoh: Budi Santoso"
+            oninput="hapusError('input-nama')"
+          >
+          <!-- Tempat pesan error, diisi oleh JavaScript -->
+          <span class="pesan-error" id="error-nama"></span>
+        </div>
+
+        <!-- Input NIM -->
+        <!-- INLINE JS — hanya izinkan input angka
+             event.key = tombol yang ditekan user
+             /[0-9]/ = pola RegEx untuk angka 0-9
+             .test() = cek apakah cocok dengan pola
+             Jika TIDAK cocok (bukan angka), return false
+             → browser akan MENGABAIKAN tombol itu
+        -->
+        <div class="form-grup">
+          <label for="input-nim" class="form-label">🔢 NIM</label>
+          <input
+            type="text"
+            id="input-nim"
+            class="form-input"
+            placeholder="Contoh: 2023001"
+            onkeypress="return /[0-9]/.test(event.key)"
+            oninput="hapusError('input-nim')"
+          >
+          <span class="pesan-error" id="error-nim"></span>
+        </div>
+
+        <!-- Input Mata Kuliah -->
+        <!-- Gunakan <select> agar data lebih konsisten -->
+        <!-- INLINE JS — onchange dijalankan saat pilihan berubah -->
+        <div class="form-grup">
+          <label for="input-matkul" class="form-label">📚 Mata Kuliah</label>
+          <select
+            id="input-matkul"
+            class="form-input"
+            onchange="hapusError('input-matkul')"
+          >
+            <option value="">-- Pilih Mata Kuliah --</option>
+            <option value="Pemrograman Web">Pemrograman Web</option>
+            <option value="Basis Data">Basis Data</option>
+            <option value="Algoritma">Algoritma & Pemrograman</option>
+            <option value="Jaringan Komputer">Jaringan Komputer</option>
+            <option value="Sistem Operasi">Sistem Operasi</option>
+            <option value="Matematika Diskrit">Matematika Diskrit</option>
+          </select>
+          <span class="pesan-error" id="error-matkul"></span>
+        </div>
+
+        <!-- Input Nilai Angka -->
+        <!-- INLINE JS — oninput
+             Setiap kali angka nilai berubah,
+             langsung tampilkan preview grade-nya.
+             Ini contoh interaktivitas real-time.
+        -->
+        <div class="form-grup">
+          <label for="input-nilai" class="form-label">
+            🎯 Nilai (0–100)
+            <!-- Teks grade berubah secara real-time saat user mengetik nilai -->
+            <span id="preview-grade" class="preview-grade"></span>
+          </label>
+          <input
+            type="number"
+            id="input-nilai"
+            class="form-input"
+            placeholder="Contoh: 85"
+            min="0"
+            max="100"
+            oninput="tampilkanPreviewGrade(this.value); hapusError('input-nilai')"
+          >
+          <span class="pesan-error" id="error-nilai"></span>
+        </div>
+
+        <!-- Input Semester -->
+        <div class="form-grup">
+          <label for="input-semester" class="form-label">📅 Semester</label>
+          <select id="input-semester" class="form-input">
+            <option value="1">Semester 1</option>
+            <option value="2" selected>Semester 2</option>
+            <!-- "selected" = pilihan yang aktif saat pertama kali dibuka -->
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+          </select>
+        </div>
+
+      </div><!-- akhir form-grid -->
+
+
+      <!-- TOMBOL AKSI -->
+      <div class="tombol-grup">
+
+        <!-- INLINE JS: onclick memanggil fungsi simpanNilai() -->
+        <button class="tombol-simpan" onclick="simpanNilai()">
+          💾 Simpan Nilai
+        </button>
+
+        <!-- INLINE JS: onclick memanggil fungsi bersihkanForm() -->
+        <button class="tombol-bersihkan" onclick="bersihkanForm()">
+          🔄 Bersihkan Form
+        </button>
+
+      </div>
+
+      <!-- Kotak notifikasi — disembunyikan dulu, ditampilkan oleh JS -->
+      <div id="notifikasi" class="notifikasi" style="display: none;">
+        <!-- Isi notifikasi akan diisi oleh JavaScript -->
+      </div>
+
+    </div><!-- akhir kartu form -->
+
+
+    <!-- ── KARTU PRATINJAU — Ringkasan data terakhir yang disimpan ── -->
+    <div class="kartu kartu-ringkasan">
+      <h2 class="kartu-judul">👀 Pratinjau Terakhir Disimpan</h2>
+      <!-- Konten diisi oleh JavaScript setelah data disimpan -->
+      <div id="pratinjau-terakhir">
+        <p class="teks-kosong">Belum ada data yang disimpan. Isi form di atas.</p>
+      </div>
+    </div>
+
+
+    <!-- ── KOTAK INFO PANDUAN ── -->
+    <div class="kartu kartu-info">
+      <h2 class="kartu-judul">💡 Panduan Konversi Nilai</h2>
+      <div class="tabel-panduan">
+        <div class="baris-panduan header-panduan">
+          <span>Nilai Angka</span><span>Grade</span><span>Keterangan</span><span>Bobot</span>
+        </div>
+        <div class="baris-panduan">
+          <span>85 – 100</span><span class="grade-a">A</span><span>Sangat Baik</span><span>4.0</span>
+        </div>
+        <div class="baris-panduan">
+          <span>75 – 84</span><span class="grade-b">B</span><span>Baik</span><span>3.0</span>
+        </div>
+        <div class="baris-panduan">
+          <span>65 – 74</span><span class="grade-c">C</span><span>Cukup</span><span>2.0</span>
+        </div>
+        <div class="baris-panduan">
+          <span>55 – 64</span><span class="grade-d">D</span><span>Kurang</span><span>1.0</span>
+        </div>
+        <div class="baris-panduan">
+          <span>0 – 54</span><span class="grade-e">E</span><span>Tidak Lulus</span><span>0.0</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ┌─────────────────────────────────────────────────┐
+       │  FOOTER                                         │
+       └─────────────────────────────────────────────────┘ -->
+  <footer class="app-footer">
+    <p>📊 Aplikasi Nilai Mahasiswa · Studi Kasus Pemrograman Web Semester 2</p>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       JAVASCRIPT JENIS 2 — EMBEDDED (INTERNAL SCRIPT)
+       Ditulis di dalam tag <script> di dalam file HTML.
+       Berisi logika yang KHUSUS untuk halaman ini (index.html).
+
+       KENAPA DI BAGIAN BAWAH BODY?
+       Karena JavaScript harus dijalankan SETELAH elemen HTML
+       di atasnya sudah ada. Jika ditaruh di <head>, JavaScript
+       akan berjalan sebelum form/input terbuat, sehingga tidak
+       bisa menemukan elemen-elemen tersebut.
+  ══════════════════════════════════════════════════════════════ -->
+  <script>
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 1: FUNGSI BANTU (HELPER FUNCTIONS)
+    // Fungsi-fungsi kecil yang membantu fungsi utama.
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: tentukanGrade
+    // Tujuan : Mengubah nilai angka menjadi grade huruf
+    // Input  : nilai (angka, contoh: 85)
+    // Output : objek berisi grade, keterangan, dan warna
+    //
+    // Contoh pemakaian:
+    //   tentukanGrade(85) → { huruf:"A", ket:"Sangat Baik", warna:"#27ae60" }
+    // ─────────────────────────────────────────────
+    function tentukanGrade(nilai) {
+
+      // Struktur IF-ELSE IF: diperiksa dari atas ke bawah.
+      // Begitu satu kondisi BENAR, blok itu dijalankan
+      // dan sisanya DILEWATI.
+
+      if (nilai >= 85) {
+        // Nilai 85 ke atas → Grade A
+        return { huruf: "A", keterangan: "Sangat Baik", warna: "#27ae60", bobot: 4.0 };
+
+      } else if (nilai >= 75) {
+        // Nilai 75–84 → Grade B
+        return { huruf: "B", keterangan: "Baik", warna: "#3498db", bobot: 3.0 };
+
+      } else if (nilai >= 65) {
+        // Nilai 65–74 → Grade C
+        return { huruf: "C", keterangan: "Cukup", warna: "#f39c12", bobot: 2.0 };
+
+      } else if (nilai >= 55) {
+        // Nilai 55–64 → Grade D
+        return { huruf: "D", keterangan: "Kurang", warna: "#e67e22", bobot: 1.0 };
+
+      } else {
+        // Nilai 0–54 → Grade E (tidak lulus)
+        return { huruf: "E", keterangan: "Tidak Lulus", warna: "#e74c3c", bobot: 0.0 };
+      }
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: tampilkanPreviewGrade
+    // Tujuan : Menampilkan grade SECARA LANGSUNG saat user
+    //          mengetik angka nilai (tanpa perlu klik tombol)
+    // Input  : nilaiStr (string dari input, contoh: "85")
+    // ─────────────────────────────────────────────
+    function tampilkanPreviewGrade(nilaiStr) {
+
+      // Ambil elemen HTML tempat grade akan ditampilkan
+      var elPreview = document.getElementById("preview-grade");
+
+      // parseInt() → mengubah string "85" menjadi angka 85
+      // Kita butuh angka agar bisa dibandingkan (>= 85, dll)
+      var nilai = parseInt(nilaiStr);
+
+      // Cek: apakah hasilnya angka yang valid?
+      // isNaN() → "is Not a Number?" → true jika BUKAN angka
+      if (isNaN(nilai) || nilaiStr === "") {
+        // Jika input kosong atau bukan angka, kosongkan preview
+        elPreview.textContent = "";
+        return; // hentikan fungsi di sini, tidak perlu lanjut
+      }
+
+      // Pastikan nilai dalam rentang 0–100
+      if (nilai < 0)   nilai = 0;
+      if (nilai > 100) nilai = 100;
+
+      // Panggil fungsi tentukanGrade untuk mendapat data grade
+      var grade = tentukanGrade(nilai);
+
+      // Tampilkan huruf grade di sebelah label
+      // Ubah teks DAN warna sesuai grade
+      elPreview.textContent  = "→ " + grade.huruf + " (" + grade.keterangan + ")";
+      elPreview.style.color  = grade.warna;
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: hapusError
+    // Tujuan : Menghapus tanda merah pada input field
+    //          saat user mulai memperbaiki inputnya
+    // Input  : idInput (string, contoh: "input-nama")
+    // ─────────────────────────────────────────────
+    function hapusError(idInput) {
+
+      // getElementById() → mencari elemen HTML berdasarkan id-nya
+      var elInput = document.getElementById(idInput);
+      var elError = document.getElementById("error-" + idInput.replace("input-", ""));
+      // .replace("input-", "") → contoh: "input-nama" → "nama"
+      // sehingga id error yang dicari adalah "error-nama"
+
+      // classList.remove() → menghapus nama class dari elemen
+      // "error" adalah class CSS yang membuat border merah
+      if (elInput) elInput.classList.remove("error");
+
+      // Kosongkan teks pesan error
+      if (elError) elError.textContent = "";
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: tampilkanError
+    // Tujuan : Menampilkan pesan error di bawah input field
+    // Input  : idInput (string), pesan (string)
+    // ─────────────────────────────────────────────
+    function tampilkanError(idInput, pesan) {
+
+      var elInput = document.getElementById(idInput);
+      var elError = document.getElementById("error-" + idInput.replace("input-", ""));
+
+      // Tambahkan class "error" → membuat border input menjadi merah (via CSS)
+      if (elInput) elInput.classList.add("error");
+
+      // Isi teks pesan error
+      if (elError) elError.textContent = pesan;
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 2: FUNGSI VALIDASI
+    // Validasi = memeriksa apakah data yang diinput sudah benar
+    // sebelum disimpan.
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: validasiForm
+    // Tujuan : Memeriksa SEMUA input sebelum disimpan
+    // Output : true  → semua valid, boleh disimpan
+    //          false → ada yang salah, jangan simpan
+    // ─────────────────────────────────────────────
+    function validasiForm() {
+
+      // Ambil nilai dari setiap input
+      // .value → mengambil isi/nilai dari elemen input
+      // .trim() → menghapus spasi di awal dan akhir
+      var nama     = document.getElementById("input-nama").value.trim();
+      var nim      = document.getElementById("input-nim").value.trim();
+      var matkul   = document.getElementById("input-matkul").value;
+      var nilaiStr = document.getElementById("input-nilai").value;
+
+      // Variabel untuk melacak apakah form valid
+      // Dimulai dari true, akan diubah ke false jika ada error
+      var valid = true;
+
+      // ── Cek 1: Nama tidak boleh kosong ──
+      if (nama === "") {
+        tampilkanError("input-nama", "⚠️ Nama tidak boleh kosong.");
+        valid = false; // tandai sebagai tidak valid
+      }
+
+      // ── Cek 2: NIM tidak boleh kosong, minimal 5 digit ──
+      if (nim === "") {
+        tampilkanError("input-nim", "⚠️ NIM tidak boleh kosong.");
+        valid = false;
+      } else if (nim.length < 5) {
+        // "else if" → cek ini HANYA dijalankan jika cek sebelumnya TIDAK error
+        tampilkanError("input-nim", "⚠️ NIM minimal 5 digit.");
+        valid = false;
+      }
+
+      // ── Cek 3: Mata kuliah harus dipilih ──
+      if (matkul === "") {
+        tampilkanError("input-matkul", "⚠️ Pilih mata kuliah terlebih dahulu.");
+        valid = false;
+      }
+
+      // ── Cek 4: Nilai harus angka antara 0–100 ──
+      if (nilaiStr === "") {
+        tampilkanError("input-nilai", "⚠️ Nilai tidak boleh kosong.");
+        valid = false;
+      } else {
+        var nilai = parseInt(nilaiStr);
+        if (isNaN(nilai) || nilai < 0 || nilai > 100) {
+          tampilkanError("input-nilai", "⚠️ Nilai harus angka antara 0 sampai 100.");
+          valid = false;
+        }
+      }
+
+      return valid; // kembalikan hasil: true atau false
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 3: FUNGSI PENYIMPANAN DATA
+    // Data disimpan di localStorage — tempat penyimpanan data
+    // di browser yang tidak hilang walaupun halaman di-refresh.
+    //
+    // ANALOGI localStorage:
+    // Bayangkan localStorage seperti buku catatan di laci browser.
+    // Data ditulis sebagai teks, sehingga objek/array JavaScript
+    // harus diubah dulu ke format JSON (teks) untuk disimpan,
+    // dan diubah kembali saat dibaca.
+    //
+    //   Simpan: objekJS → JSON.stringify() → teks → localStorage
+    //   Baca  : localStorage → teks → JSON.parse() → objekJS
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: ambilSemuaData
+    // Tujuan : Mengambil array semua data nilai dari localStorage
+    // Output : array objek data nilai (kosong jika belum ada)
+    // ─────────────────────────────────────────────
+    function ambilSemuaData() {
+
+      // localStorage.getItem("kunci") → ambil data dengan kunci tertentu
+      // Jika kunci tidak ada, hasilnya adalah null
+      var dataJSON = localStorage.getItem("data-nilai");
+
+      // Jika data ada (bukan null), ubah dari JSON ke array JS
+      // Jika belum ada, kembalikan array kosong []
+      if (dataJSON !== null) {
+        return JSON.parse(dataJSON); // JSON.parse → teks JSON → array JS
+      } else {
+        return []; // array kosong
+      }
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: simpanSemuaData
+    // Tujuan : Menyimpan array data nilai ke localStorage
+    // Input  : arrayData (array berisi semua objek nilai)
+    // ─────────────────────────────────────────────
+    function simpanSemuaData(arrayData) {
+      // JSON.stringify() → mengubah array JS menjadi teks JSON
+      // localStorage.setItem("kunci", "nilai") → simpan ke browser
+      localStorage.setItem("data-nilai", JSON.stringify(arrayData));
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: simpanNilai  ← FUNGSI UTAMA HALAMAN INI
+    // Tujuan : Mengambil data dari form, memvalidasi,
+    //          lalu menyimpannya ke localStorage
+    // Dipanggil saat tombol "Simpan Nilai" diklik
+    // ─────────────────────────────────────────────
+    function simpanNilai() {
+
+      // Langkah 1: Validasi dulu
+      // Jika validasiForm() mengembalikan false, hentikan fungsi
+      var formValid = validasiForm();
+      if (!formValid) {
+        // ! berarti "kebalikan" → !false = true
+        // Jadi: jika formValid adalah false, masuk ke sini
+        return; // hentikan fungsi, tidak lanjut ke langkah berikutnya
+      }
+
+      // Langkah 2: Kumpulkan data dari form
+      var nama     = document.getElementById("input-nama").value.trim();
+      var nim      = document.getElementById("input-nim").value.trim();
+      var matkul   = document.getElementById("input-matkul").value;
+      var nilai    = parseInt(document.getElementById("input-nilai").value);
+      var semester = document.getElementById("input-semester").value;
+
+      // Langkah 3: Tentukan grade berdasarkan nilai angka
+      var grade = tentukanGrade(nilai);
+
+      // Langkah 4: Buat objek data baru
+      // Objek = kumpulan pasangan "nama properti: nilainya"
+      var dataBaru = {
+        id       : Date.now(),  // ID unik dari timestamp (milidetik saat ini)
+        nama     : nama,
+        nim      : nim,
+        matkul   : matkul,
+        nilai    : nilai,
+        grade    : grade.huruf,
+        keterangan: grade.keterangan,
+        semester : semester,
+        tanggal  : new Date().toLocaleDateString("id-ID")
+        // new Date() → objek tanggal/waktu saat ini
+        // .toLocaleDateString("id-ID") → format Indonesia, contoh: "5/5/2025"
+      };
+
+      // Langkah 5: Ambil data lama, tambahkan data baru
+      var semuaData = ambilSemuaData(); // ambil array data yang sudah ada
+      semuaData.push(dataBaru);        // push() → menambahkan item ke akhir array
+
+      // Langkah 6: Simpan kembali ke localStorage
+      simpanSemuaData(semuaData);
+
+      // Langkah 7: Tampilkan notifikasi berhasil
+      tampilkanNotifikasi(
+        "✅ Data <strong>" + nama + "</strong> berhasil disimpan! Grade: <strong>" + grade.huruf + "</strong>",
+        "sukses"
+      );
+
+      // Langkah 8: Tampilkan pratinjau data yang baru saja disimpan
+      tampilkanPratinjau(dataBaru);
+
+      // Langkah 9: Bersihkan form untuk input berikutnya
+      bersihkanForm();
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 4: FUNGSI TAMPILAN
+    // Fungsi-fungsi untuk mengubah tampilan halaman
+    // ════════════════════════════════════════════════════════════
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: tampilkanNotifikasi
+    // Tujuan : Menampilkan kotak pesan di bawah tombol
+    // Input  : pesan (string HTML), tipe ("sukses" atau "gagal")
+    // ─────────────────────────────────────────────
+    function tampilkanNotifikasi(pesan, tipe) {
+
+      var el = document.getElementById("notifikasi");
+
+      // Isi HTML pesan
+      el.innerHTML = pesan;
+
+      // Atur class berdasarkan tipe (sukses = hijau, gagal = merah)
+      el.className = "notifikasi notifikasi-" + tipe;
+      // Contoh hasil: class="notifikasi notifikasi-sukses"
+
+      // Tampilkan elemen (sebelumnya display:none)
+      el.style.display = "block";
+
+      // Sembunyikan otomatis setelah 4 detik
+      // setTimeout(fungsi, milidetik) → jalankan fungsi setelah delay
+      setTimeout(function() {
+        el.style.display = "none"; // sembunyikan lagi setelah 4000ms
+      }, 4000);
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: tampilkanPratinjau
+    // Tujuan : Menampilkan kartu ringkasan data terakhir
+    //          yang baru saja disimpan
+    // Input  : data (objek satu data nilai)
+    // ─────────────────────────────────────────────
+    function tampilkanPratinjau(data) {
+
+      var el = document.getElementById("pratinjau-terakhir");
+
+      // innerHTML = mengubah isi HTML dari sebuah elemen
+      // Template literal (backtick `) memudahkan menulis HTML panjang
+      // ${...} = sisipkan nilai variabel di dalam string
+      el.innerHTML =
+        '<div class="kartu-pratinjau">' +
+          '<div class="pratinjau-nama">' + data.nama + ' <span class="pratinjau-nim">(' + data.nim + ')</span></div>' +
+          '<div class="pratinjau-matkul">📚 ' + data.matkul + ' · Semester ' + data.semester + '</div>' +
+          '<div class="pratinjau-nilai-baris">' +
+            '<span class="pratinjau-angka">' + data.nilai + '</span>' +
+            '<span class="pratinjau-grade grade-' + data.grade.toLowerCase() + '">' + data.grade + '</span>' +
+            '<span class="pratinjau-ket">' + data.keterangan + '</span>' +
+          '</div>' +
+          '<div class="pratinjau-tanggal">📅 Disimpan: ' + data.tanggal + '</div>' +
+        '</div>';
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: bersihkanForm
+    // Tujuan : Mengosongkan semua input form
+    //          setelah data disimpan atau tombol Reset diklik
+    // ─────────────────────────────────────────────
+    function bersihkanForm() {
+
+      // Reset setiap input ke nilai kosong / default
+      document.getElementById("input-nama").value     = "";
+      document.getElementById("input-nim").value      = "";
+      document.getElementById("input-matkul").value   = "";
+      document.getElementById("input-nilai").value    = "";
+      document.getElementById("input-semester").value = "2"; // kembali ke Semester 2
+
+      // Bersihkan juga preview grade
+      document.getElementById("preview-grade").textContent = "";
+
+      // Hapus semua tanda error yang mungkin masih terlihat
+      hapusError("input-nama");
+      hapusError("input-nim");
+      hapusError("input-matkul");
+      hapusError("input-nilai");
+
+      // Fokus kursor ke input nama agar user langsung bisa mengetik lagi
+      document.getElementById("input-nama").focus();
+      // .focus() → memindahkan fokus keyboard ke elemen ini
+    }
+
+
+    // ─────────────────────────────────────────────
+    // FUNGSI: konfirmasiHapusSemua
+    // Tujuan : Meminta konfirmasi sebelum menghapus semua data
+    // Dipanggil saat tombol "Hapus Semua" di navbar diklik
+    // ─────────────────────────────────────────────
+    function konfirmasiHapusSemua() {
+
+      // confirm() → menampilkan dialog konfirmasi dengan tombol OK dan Batal
+      // Mengembalikan true jika user klik OK, false jika Batal
+      var yakin = confirm("⚠️ Yakin ingin menghapus SEMUA data nilai?\n\nAksi ini tidak bisa dibatalkan.");
+
+      if (yakin) {
+        // Hapus data dari localStorage
+        localStorage.removeItem("data-nilai");
+
+        // Beri tahu pengguna bahwa data sudah dihapus
+        alert("✅ Semua data berhasil dihapus.");
+
+        // Refresh halaman agar tampilan ikut diperbarui
+        location.reload(); // location.reload() = muat ulang halaman ini
+      }
+      // Jika user klik Batal (yakin = false), tidak terjadi apa-apa
+    }
+
+
+    // ════════════════════════════════════════════════════════════
+    // BAGIAN 5: KODE YANG DIJALANKAN SAAT HALAMAN PERTAMA DIMUAT
+    //
+    // document.addEventListener("DOMContentLoaded", fungsi)
+    // → "Ketika HTML sudah selesai dibaca browser, jalankan fungsi ini"
+    // → Penting! Agar JS tidak error karena mencoba akses elemen
+    //   yang belum ada.
+    // ════════════════════════════════════════════════════════════
+    document.addEventListener("DOMContentLoaded", function() {
+
+      // Cek apakah ada data pratinjau terakhir yang disimpan sementara
+      var pratinjauJSON = sessionStorage.getItem("pratinjau-terakhir");
+      // sessionStorage sama seperti localStorage, tapi DATA HILANG
+      // saat tab/browser ditutup. Cocok untuk data sementara.
+
+      if (pratinjauJSON !== null) {
+        var dataPratinjau = JSON.parse(pratinjauJSON);
+        tampilkanPratinjau(dataPratinjau);
+        sessionStorage.removeItem("pratinjau-terakhir"); // hapus setelah ditampilkan
+      }
+
+    });
+
+  </script>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       JAVASCRIPT JENIS 3 — EXTERNAL FILE
+       File app.js dipisah berisi fungsi yang dipakai
+       DI SEMUA HALAMAN (index, daftar, statistik).
+  ══════════════════════════════════════════════════════════ -->
+  <script src="app.js"></script>
+
+</body>
+</html>
